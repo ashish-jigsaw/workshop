@@ -1,7 +1,6 @@
  /*@@AG
- * Display Temperature and Humidity values from DHT11 to OLED display
- * Note: This program is modified for ESP8266 and not Arduino. We
- * are not using Adafruit library, instead OLED library
+ * Read Temperature and Humidity values from DHT11 sensor and send
+ * to ThingSpeak cloud service.
  * 
  * Connections:
  * DHT 11
