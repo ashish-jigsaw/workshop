@@ -20,8 +20,8 @@
 #include "DHT.h"
 #include <ESP8266WiFi.h>        // Include the Wi-Fi library
 
-const char* ssid     = "Iamashish";         // The SSID (name) of the Wi-Fi network you want to connect to
-const char* password = "9215763124";     // The password of the Wi-Fi network
+const char* ssid     = "AshishNote9";         // The SSID (name) of the Wi-Fi network you want to connect to
+const char* password = "9886717078";     // The password of the Wi-Fi network
 
 #define DHTPIN 14
 #define DHTTYPE DHT11
