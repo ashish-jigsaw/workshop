@@ -46,6 +46,12 @@ void setup() {
     }
 
     WiFiMulti.addAP("SSID", "PASSWORD");
+
+        for(uint8_t t = 4; t > 0; t--) {
+        USE_SERIAL.printf("[SETUP] WAIT %d...\n", t);
+        USE_SERIAL.flush();
+        delay(1000);
+    }
 }
 
 void loop() {
