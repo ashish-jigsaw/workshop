@@ -5,16 +5,6 @@
  *
  */
 
-#include "DHT.h"
-
-#define DHTPIN 14     // what digital pin we're connected to
-
-// Uncomment whatever type you're using!
-#define DHTTYPE DHT11   // DHT 11
-
-// Initialize DHT sensor.
-DHT dht(DHTPIN, DHTTYPE);
-
 #include <Arduino.h>
 
 #include <ESP8266WiFi.h>
@@ -26,11 +16,17 @@ DHT dht(DHTPIN, DHTTYPE);
 
 ESP8266WiFiMulti WiFiMulti;
 
+#include "DHT.h"
+#define DHTPIN 14
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+
 void setup() {
 
-    USE_SERIAL.begin(115200);
     dht.begin();
-   // USE_SERIAL.setDebugOutput(true);
+
+    USE_SERIAL.begin(115200);
+    // USE_SERIAL.setDebugOutput(true);
 
     USE_SERIAL.println();
     USE_SERIAL.println();
@@ -43,39 +39,27 @@ void setup() {
     }
 
     WiFiMulti.addAP("AshishNote9", "9886717078");
-
-        for(uint8_t t = 4; t > 0; t--) {
-        USE_SERIAL.printf("[SETUP] WAIT %d...\n", t);
-        USE_SERIAL.flush();
-        delay(1000);
-    }
 }
 
 void loop() {
     // wait for WiFi connection
     if((WiFiMulti.run() == WL_CONNECTED)) {
 
-    // Wait a few seconds between measurements.
-    delay(2000);
-
-    // Reading temperature or humidity takes about 250 milliseconds!
-    // Sensor readings may also be up to 2 seconds
-    float h = dht.readHumidity();
-
-    // Check if any reads failed and exit early (to try again).
-    if (isnan(h)) {
-      Serial.println("Failed to read from DHT sensor!");
-      return;
-     }
-
-        // Form URL
-        char url[256];
-        sprintf (url, "http://192.168.43.50:1880/nodemcu?humidity=%f", h);
+        float h = dht.readHumidity();
+        float t = dht.readTemperature();
+        if (isnan(h) || isnan(t)) {
+          Serial.println("Failed to read from DHT sensor!");
+          delay(2000);
+          return;
+        }
 
         HTTPClient http;
+        char url[1024];
 
         USE_SERIAL.print("[HTTP] begin...\n");
         // configure traged server and url
+        sprintf (url, "http://192.168.43.50:3000/log/%d/%d", (int) t, (int) h);
+        USE_SERIAL.println(url);
         http.begin(url); //HTTP
 
         USE_SERIAL.print("[HTTP] GET...\n");
@@ -98,5 +82,7 @@ void loop() {
 
         http.end();
     }
+
+    delay(5000);
 }
 
